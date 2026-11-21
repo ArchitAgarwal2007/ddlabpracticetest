@@ -3,7 +3,7 @@ module next_time (input [5:0] t, input add, tick, clr, on,
                   output reg [5:0] nt);
   always @(*) begin
     if (clr)             nt = 6'd0;                             // cancel
-    else if (add)        nt = (t >= 6'd60) ? 6'd60 : t + 6'd10; // +10 s, max 60
+    else if (add)        nt = (t >= 6'd51) ? 6'd60 : t + 6'd10; // +10 s, max 60
     else if (tick && on) nt = t - 6'd1;                         // 1 s has passed
     else                 nt = t;
   end
@@ -18,7 +18,7 @@ endmodule
 
 // on_check: on = 1 while there is time left
 module on_check (input [5:0] t, output on);
-  assign on = (t > 6'd1);
+  assign on = (t >= 6'd1);
 endmodule
 
 // timer: top level

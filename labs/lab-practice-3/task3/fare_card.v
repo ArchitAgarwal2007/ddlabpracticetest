@@ -3,7 +3,7 @@ module next_bal (input [5:0] bal, input top, tap, clr, ok,
                  output reg [5:0] next);
   reg [5:0] sum;                          // bal plus one top-up of 20
   always @(*) begin
-    sum = bal + 6'd20;
+    sum = (bal>40) ? 60: bal+ 6'd20;
     if (clr)            next = 6'd0;                          // card cleared
     else if (top)       next = (sum > 6'd60) ? 6'd60 : sum;   // top-up, capped at 60
     else if (tap && ok) next = bal - 6'd15;                   // a ride is paid for
@@ -20,7 +20,7 @@ endmodule
 
 // ok_check: ok = 1 while bal is enough for a ride
 module ok_check (input [5:0] bal, output ok);
-  assign ok = (bal > 6'd15);
+  assign ok = (bal >= 6'd15);
 endmodule
 
 // fare_card: top level

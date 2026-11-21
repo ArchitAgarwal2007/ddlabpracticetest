@@ -6,6 +6,8 @@ module tb;
   reg        clk = 0, rst_n = 0, top = 0, tap = 0, clr = 0;
   wire [5:0] bal;
   wire       ok;
+    wire [5:0] bal_m;
+  wire       ok_m;
   fare_card dut (.clk(clk), .rst_n(rst_n), .top(top), .tap(tap), .clr(clr),
                  .bal(bal), .ok(ok));
 
@@ -13,17 +15,36 @@ module tb;
 
   // (a) TODO: instantiate fare_model (in model.v) as the reference model,
   //     driven by the same inputs as dut.
-
+  fare_model dutm (.clk(clk), .rst_n(rst_n), .top(top), .tap(tap), .clr(clr),
+                 .bal(bal_m), .ok(ok_m));
   // (a) TODO: after every clock edge, compare bal and ok of dut with the
   //     model's outputs; on a mismatch add 1 to errors ($display helps debug).
-  integer errors = 0;
 
+  integer errors = 0;
+  always@(negedge clk)begin
+if(bal!=bal_m&& ok!=ok_m) errors<=errors+1;
+  $display("bal is %d ok is %d bal_m is %d ok_m is %d",bal,ok,bal_m,ok_m);
+  end
   // (b) TODO: test cases. Change inputs only at falling clock edges.
   //     Cases worth trying: a top-up that goes past the cap of 60, a tap when
   //     bal is exactly 15, a tap when bal is too low, clr, and a reset pulse
   //     between two clock edges.
   initial begin
     #12 rst_n = 1;
+    @(negedge clk) top=1;
+    @(negedge clk) top=1;
+    @(negedge clk) top=1;
+    @(negedge clk) top=1;
+    @(negedge clk) top=0;
+#2 rst_n=0;
+#1 rst_n=1;
+@(negedge clk) top=1;
+@(negedge clk) top=0;tap=1;
+@(negedge clk) tap=0;
+#2 rst_n=0;
+#1 rst_n=1;
+@(negedge clk) tap=1;
+
     // ... your test cases here ...
     @(negedge clk); #1;                       // let the last check finish
     if (errors == 0) $display("RESULT: PASS");

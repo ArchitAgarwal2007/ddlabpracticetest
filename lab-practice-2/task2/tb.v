@@ -29,6 +29,7 @@ module tb;
     #12 rst_n = 1;
     @(negedge clk) add = 1;
     @(negedge clk) add = 0;
+    
     // ... your test cases here ...
     @(negedge clk); #1;                       // let the last check finish
     if (errors == 0) $display("RESULT: PASS");

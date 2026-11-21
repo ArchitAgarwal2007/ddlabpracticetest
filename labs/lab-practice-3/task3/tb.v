@@ -8,6 +8,9 @@ module tb;
   fare_card dut (.clk(clk), .rst_n(rst_n), .top(top), .tap(tap), .clr(clr),
                  .bal(bal), .ok(ok));
   string vcd_file;
+always@(negedge clk)begin
+$display("bal is %d ok is %d",bal,ok);
+end
   initial begin
     if ($value$plusargs("vcd=%s", vcd_file)) begin
       $dumpfile(vcd_file);

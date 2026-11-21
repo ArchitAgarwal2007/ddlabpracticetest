@@ -8,6 +8,9 @@ module tb;
   timer dut (.clk(clk), .rst_n(rst_n), .add(add), .tick(tick), .clr(clr),
              .t(t), .on(on));
   string vcd_file;
+  always@(negedge clk)begin
+              $display("t is %d on is %d",t,on);
+             end
   initial begin
     if ($value$plusargs("vcd=%s", vcd_file)) begin
       $dumpfile(vcd_file);
